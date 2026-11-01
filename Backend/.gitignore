@@ -13,6 +13,7 @@ yarn-debug.log*
 # Build files
 dist/
 build/
+uploads
 
 # OS files
 .DS_Store
