@@ -1,3 +1,4 @@
+
 import axios from "axios";
 import { BASE_URL } from "./apiPaths.js";
 
@@ -13,10 +14,12 @@ const axiosInstance = axios.create({
 // Request Interceptor
 axiosInstance.interceptors.request.use(
     (config) => {
-        const accessToken = localStorage.getItem(token);
+        const accessToken = localStorage.getItem('token');
+
         if (accessToken) {
             config.headers.Authorization = `Bearer ${accessToken}`;
         }
+
         return config;
     },
     (error) => {
@@ -30,16 +33,18 @@ axiosInstance.interceptors.response.use(
         return response;
     },
     (error) => {
-        if (error.message) {
-            if (error.response) {
-                if (error.response.status === 500) {
-                    console.error('Server error. Please try again later.');
-                }
-            }   else if (error.code === "ECONNABORTED") {
-                console.error("Request timeout. Please try again.");
+
+        if (error.response) {
+            if (error.response.status === 500) {
+                console.error('Server error. Please try again later.');
             }
-            return Promise.reject(error);
+        } else if (error.code === "ECONNABORTED") {
+            console.error("Request timeout. Please try again.");
+        } else {
+            console.error("Network error:", error.message);
         }
+
+        return Promise.reject(error);
     }
 );
 
