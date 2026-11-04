@@ -19,7 +19,7 @@ const getFlashcardsForDocument = async (documentId) => {
     }
 };
 
-const reviewFlashcards = async (cardId, cardIndex) => {
+const reviewFlashcard = async (cardId, cardIndex) => {
     try {
         const response = await axiosInstance.post(API_PATHS.FLASHCARDS.REVIEW_FLASHCARD(cardId), { cardIndex });
         return response.data;
@@ -30,14 +30,14 @@ const reviewFlashcards = async (cardId, cardIndex) => {
 
 const toggleStar = async (cardId) => {
     try {
-        const response = await axiosInstance.post(API_PATHS.FLASHCARDS.TOGGLE_STAR(cardId));
+        const response = await axiosInstance.put(API_PATHS.FLASHCARDS.TOGGLE_STAR(cardId));
         return response.data;
     }   catch (error) {
         throw error.response?.data || { message: 'Failed to star flashcards' };
     }
 };
 
-const deleteFlashcards = async (id) => {
+const deleteFlashcardSet = async (id) => {
     try {
         const response = await axiosInstance.delete(API_PATHS.FLASHCARDS.DELETE_FLASHCARD_SET(id));
         return response.data;
@@ -50,9 +50,9 @@ const deleteFlashcards = async (id) => {
 const flashcardService = {
     getAllFlashcardSets,
     getFlashcardsForDocument,
-    reviewFlashcards,
+    reviewFlashcard,
     toggleStar,
-    deleteFlashcards,
+    deleteFlashcardSet,
 };
 
 export default flashcardService;

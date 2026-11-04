@@ -6,6 +6,9 @@ import toast from 'react-hot-toast';
 import { ArrowLeft, ExternalLink } from 'lucide-react';
 import Tabs from '../../component/common/Tabs';
 import PageHeader from '../../component/common/PageHeader';
+import ChatInterface from '../../component/chat/ChatInterface';
+import AIActions from '../../component/ai/AIActions';
+import FlashcardManager from '../../component/flashcards/FlashcardManager';
 
 const DocumentDetailPage = () => {
 
@@ -75,7 +78,7 @@ const DocumentDetailPage = () => {
                     
                         <iframe
                             src={pdfUrl}
-                            className='w-full h-[70vh] bg-white rounded border border-gray-300'
+                            className='w-full h-[80vh] bg-white rounded border border-gray-300'
                             title='PDF Viewer'
                             frameBorder='0'
                             style={{
@@ -93,11 +96,11 @@ const DocumentDetailPage = () => {
     };
 
     const renderAIActions = () => {
-        return 'renderAIActions'
+        return <AIActions />;
     };
 
     const renderFlashcardsTab = () => {
-        return 'renderFlashcardsTab'
+        return <FlashcardManager documentId={id} />;
     };
 
     const renderQuizzesTab = () => {
