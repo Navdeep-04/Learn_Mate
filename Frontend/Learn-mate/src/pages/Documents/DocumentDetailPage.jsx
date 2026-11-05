@@ -9,6 +9,7 @@ import PageHeader from '../../component/common/PageHeader';
 import ChatInterface from '../../component/chat/ChatInterface';
 import AIActions from '../../component/ai/AIActions';
 import FlashcardManager from '../../component/flashcards/FlashcardManager';
+import QuizManager from '../../component/quizzzes/QuizManager';
 
 const DocumentDetailPage = () => {
 
@@ -44,7 +45,7 @@ const DocumentDetailPage = () => {
         }
 
         const baseUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
-        return `${baseUrl}${filePath.startsWith('/') ? '' : '/'}${filePath}`; 
+        return `${baseUrl}${filePath.startsWith('/') ? '' : '/'}${filePath}`;
     };
 
     // Render PDF content
@@ -75,17 +76,17 @@ const DocumentDetailPage = () => {
                     </a>
                 </div>
                 <div className='bg-gray-100 p-1'>
-                    
-                        <iframe
-                            src={pdfUrl}
-                            className='w-full h-[80vh] bg-white rounded border border-gray-300'
-                            title='PDF Viewer'
-                            frameBorder='0'
-                            style={{
-                                colorScheme: 'light',
-                            }}
-                        />
-                    
+
+                    <iframe
+                        src={pdfUrl}
+                        className='w-full h-[80vh] bg-white rounded border border-gray-300'
+                        title='PDF Viewer'
+                        frameBorder='0'
+                        style={{
+                            colorScheme: 'light',
+                        }}
+                    />
+
                 </div>
             </div>
         );
@@ -104,7 +105,7 @@ const DocumentDetailPage = () => {
     };
 
     const renderQuizzesTab = () => {
-        return 'renderQuizzesTab'
+        return <QuizManager documentId={id} />
     };
 
     const tabs = [
@@ -132,7 +133,7 @@ const DocumentDetailPage = () => {
                     Back to Documents
                 </Link>
             </div>
-            <PageHeader title={document.data.title}  />
+            <PageHeader title={document.data.title} />
             <Tabs tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
         </div>
     )

@@ -6,7 +6,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto px-4 py-8">
+        <div className="fixed inset-0 z-50 flex  items-center justify-center overflow-y-auto px-4 py-8">
 
             {/* Backdrop */}
             <div
