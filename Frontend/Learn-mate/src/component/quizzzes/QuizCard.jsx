@@ -53,9 +53,9 @@ const QuizCard = ({ quiz, onDelete }) => {
             <div className='mt-2 pt-4 border-t border-slate-200'>
                 {quiz?.userAnswers?.length > 0 ? (
                     <Link to={`/quizzes/${quiz._id}/results`}>
-                        <button className='group/btn w-full inline-flex items-center justify-center gap-2 h-11 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm rounded-xl transition-all duration-200 active:scale-95 cursor-pointer'>
+                        <button className='group/btn w-full inline-flex items-center justify-center gap-2 h-11 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm rounded-xl transition-all duration-200 active:scale-95 cursor-pointer bg-linear-to-r from-blue-500 to-purple-500 hover:from-blue-700 hover:to-purple-700 text-white font-semibold text-sm rounded-xl transition-all duration-200 shadow-lg shadow-blue-500/25 active:scale-95 overflow-hidden'>
                             <BarChart2 className='h-4 w-4' strokeWidth={2.5} />
-                            View Results
+                            View Results    
                         </button>
                     </Link>
                 ) : (
