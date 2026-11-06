@@ -67,8 +67,7 @@ const FlashcardManager = ({ documentId }) => {
             setCurrentCardIndex(
                 (prevIndex) => (prevIndex + 1) % selectedSet.cards.length
             );
-        }
-        
+        }   
     };
 
     const handlePrevCard = () => {
@@ -282,8 +281,9 @@ const FlashcardManager = ({ documentId }) => {
                 <div className='flex flex-col items-center space-y-8'>
                     <div className='w-full max-w-2xl'>
                         <Flashcard
-                            flashcard={currentCard}
+                            flashcard={selectedSet.cards[currentCardIndex]}
                             onToggleStar={handleToggleStar}
+                            currentCardIndex={currentCardIndex}
                         />
                     </div>
 

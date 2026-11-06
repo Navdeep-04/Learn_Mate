@@ -177,6 +177,7 @@ const QuizManager = ({ documentId }) => {
                         </Button>
                         <Button
                             onClick={handleConfirmDelete}
+                            variant='danger'
                             disabled={deleting}
                             className='bg-red-500 hover:bg-rose-600 active:bg-rose-700 focus:ring-red-500'
                         >
