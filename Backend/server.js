@@ -3,8 +3,6 @@ dotenv.config();
 
 import express from 'express';
 import cors from 'cors';
-import path from 'path';
-import { fileURLToPath } from 'url';
 
 import connectDB from './config/db.js';
 import errorHandler from './middleware/errorHandler.js';
@@ -16,11 +14,6 @@ import aiRoutes from './routes/aiRoutes.js';
 import quizRoutes from './routes/quizRoutes.js';
 import progressRoutes from './routes/progressRoutes.js';
 
-// ES6 module __dirname alternative
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Initialize express app
 const app = express();
 
 // Connect to MongoDB
@@ -39,8 +32,16 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Health check
+app.get('/', (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: 'Welcome to LearnMate API!',
+    });
+});
+
 // Static folder for uploads
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static('uploads'));
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -50,51 +51,24 @@ app.use('/api/ai', aiRoutes);
 app.use('/api/quizzes', quizRoutes);
 app.use('/api/progress', progressRoutes);
 
-// API 404 handler
-app.use('/api', (req, res) => {
+// 404 handler
+app.use((req, res) => {
     res.status(404).json({
         success: false,
         error: 'Route not found',
-        statusCode: 404
+        statusCode: 404,
     });
 });
 
-// Production frontend setup
-if (process.env.NODE_ENV === 'production') {
-    const frontendPath = path.resolve(
-        __dirname,
-        '../frontend/learn-mate/dist'
-    );
-
-    app.use(express.static(frontendPath));
-
-    // React Router fallback
-    app.use((req, res, next) => {
-        if (req.method !== 'GET') {
-            return next();
-        }
-
-        res.sendFile(path.join(frontendPath, 'index.html'));
-    });
-} else {
-    // Development 404 handler
-    app.use((req, res) => {
-        res.status(404).json({
-            success: false,
-            error: 'Route not found',
-            statusCode: 404,
-        });
-    });
-}
-
-// Global error handler (must be last)
+// Error handler
 app.use(errorHandler);
 
-// Start server
 const PORT = process.env.PORT || 8000;
 
-app.listen(PORT, () => {
-    console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(
+        `Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`
+    );
 });
 
 process.on('unhandledRejection', (err) => {
