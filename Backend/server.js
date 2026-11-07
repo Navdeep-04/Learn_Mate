@@ -5,6 +5,7 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
+
 import connectDB from './config/db.js';
 import errorHandler from './middleware/errorHandler.js';
 
@@ -28,10 +29,9 @@ connectDB();
 // Middleware to handle CORS
 app.use(
     cors({
-        orgin: "*",
-        methods: ["GET", "POST", "PUT", "DELETE"],
-        allowedHeaders: ["Content-Type", "Authorization"],
-        credentials: true,
+        origin: process.env.CLIENT_URL || '*',
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
     })
 );
 
@@ -49,10 +49,8 @@ app.use('/api/ai', aiRoutes);
 app.use('/api/quizzes', quizRoutes);
 app.use('/api/progress', progressRoutes);
 
-app.use(errorHandler);
-
-// 404 handler
-app.use((req,res) => {
+// API 404 handler
+app.use('/api', (req, res) => {
     res.status(404).json({
         success: false,
         error: 'Route not found',
@@ -60,10 +58,42 @@ app.use((req,res) => {
     });
 });
 
+// Production frontend setup
+if (process.env.NODE_ENV === 'production') {
+    const frontendPath = path.resolve(
+        __dirname,
+        '../frontend/learn-mate/dist'
+    );
+
+    app.use(express.static(frontendPath));
+
+    // React Router fallback
+    app.use((req, res, next) => {
+        if (req.method !== 'GET') {
+            return next();
+        }
+
+        res.sendFile(path.join(frontendPath, 'index.html'));
+    });
+} else {
+    // Development 404 handler
+    app.use((req, res) => {
+        res.status(404).json({
+            success: false,
+            error: 'Route not found',
+            statusCode: 404,
+        });
+    });
+}
+
+// Global error handler (must be last)
+app.use(errorHandler);
+
 // Start server
 const PORT = process.env.PORT || 8000;
-app.listen(PORT,() => {
-    console.log(`Server running in ${process.env.NODE_ENV}mode on port ${PORT}`);
+
+app.listen(PORT, () => {
+    console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
 });
 
 process.on('unhandledRejection', (err) => {
