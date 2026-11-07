@@ -36,19 +36,20 @@ const DocumentDetailPage = () => {
 
     // Helper function to get the full PDF URL
     const getPdfUrl = () => {
-        if (!document?.data?.filePath) return null;
+    if (!document?.data?.filePath) return null;
 
-        const filePath = document.data.filePath;
+    const filePath = document.data.filePath;
 
-        if (filePath.startsWith('http://') || filePath.startsWith('https://')) {
-            return filePath; // Return the full URL if it's already a complete URL
-        }
+    if (filePath.startsWith('http://') || filePath.startsWith('https://')) {
+        return filePath;
+    }
 
-        const baseUrl = import.meta.env.VITE_API_URL
-            ? import.meta.env.VITE_API_URL.replace('/api', '')
-            : 'http://localhost:8000';
+    const apiBaseUrl =
+        import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
 
-        return `${baseUrl}${filePath.startsWith('/') ? '' : '/'}${filePath}`;
+    const serverBaseUrl = apiBaseUrl.replace(/\/api\/?$/, '');
+
+    return `${serverBaseUrl}${filePath.startsWith('/') ? '' : '/'}${filePath}`;
     };
 
     // Render PDF content
