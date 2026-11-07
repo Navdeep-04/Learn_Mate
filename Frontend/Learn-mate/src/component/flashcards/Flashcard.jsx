@@ -1,12 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Star, RotateCcw } from 'lucide-react';
 
-const Flashcard = ({ flashcard, onToggleStar }) => {
+const Flashcard = ({ flashcard, onToggleStar, currentCardIndex }) => {
     const [isFlipped, setIsFlipped] = useState(false);
 
     const handleFlip = () => {
         setIsFlipped(!isFlipped);
     };
+
+    useEffect(() => {
+        setIsFlipped(false);
+    }, [currentCardIndex]);
 
     return (
         <div className='relative w-full h-72' style={{ perspective: '1000px'}}>

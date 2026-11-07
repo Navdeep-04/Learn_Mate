@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom'
+import WelcomePage from './pages/Profile/WelcomePage';
 import LoginPage from './pages/Auth/LoginPage';
 import RegisterPage from './pages/Auth/RegisterPage';
 import NotFoundPage from './pages/NotFoundPage';
@@ -30,8 +31,9 @@ const App = () => {
       <Routes>
         <Route
           path="/"
-          element={isAuthenticated ? <Navigate to="/dasboard" replace /> : <Navigate to="/login" replace />}
+          element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Navigate to="/welcome" replace />}
         />
+        <Route path="/welcome" element={<WelcomePage />} />
         <Route path = "/login" element = {<LoginPage />} />
         <Route path = "/register" element = {<RegisterPage />} />
 
