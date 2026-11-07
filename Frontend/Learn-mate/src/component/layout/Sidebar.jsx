@@ -19,7 +19,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
 
     const handleLogout = () => {
         logout();
-        navigate("/login");
+        navigate("/welcome");
     };
 
     const navLinks = [
@@ -49,8 +49,8 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
                             <BrainCircuit className="text-white" size={20} strokeWidth={2.5} />
                         </div>
 
-                        <h1 className="text-sm md:text-base font-bold text-slate-900 tracking-tight">
-                            Learn Mate
+                        <h1 className="text-md md:text-base font-bold text-slate-900 tracking-tight">
+                            Learn<span className="text-emerald-500">Mate</span>
                         </h1>
                     </div>
 
