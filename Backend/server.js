@@ -4,6 +4,9 @@ dotenv.config();
 import express from 'express';
 import cors from 'cors';
 
+import path from 'path';
+import { fileURLToPath } from 'url';
+
 import connectDB from './config/db.js';
 import errorHandler from './middleware/errorHandler.js';
 
@@ -18,6 +21,9 @@ const app = express();
 
 // Connect to MongoDB
 connectDB();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Middleware to handle CORS
 app.use(
@@ -39,6 +45,7 @@ app.get('/', (req, res) => {
         message: 'Welcome to LearnMate API!',
     });
 });
+
 
 // Static folder for uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
