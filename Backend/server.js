@@ -26,12 +26,25 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Middleware to handle CORS
-app.use(
-    cors({
-        origin: process.env.CLIENT_URL || '*',
-        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-        allowedHeaders: ['Content-Type', 'Authorization'],
-        credentials: true,
+const allowedOrigins = [
+    'http://localhost:5173',
+    'https://learn-mate.vercel.app',
+];
+
+app.use(cors({
+    origin: (origin, callback) => {
+        const isVercelPreview =
+            /^https:\/\/learn-mate-[a-z0-9]+-navdeep16\.vercel\.app$/.test(origin || '');
+
+        if (!origin || allowedOrigins.includes(origin) || isVercelPreview) {
+            callback(null, true);
+        } else {
+            callback(new Error(`CORS blocked: ${origin}`));
+        }
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
     })
 );
 
