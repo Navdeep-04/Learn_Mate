@@ -2,7 +2,7 @@ import Document from '../models/Document.js';
 import Flashcard from '../models/Flashcard.js';
 import Quiz from '../models/Quiz.js';
 import { extractTextFromPDF } from '../utils/pdfParser.js';
-import { chunkText } from '../utils/textChunker.js'; 
+import { chunkText } from '../utils/textChunker.js';
 import fs from 'fs/promises';
 import mongoose from 'mongoose';
 
@@ -12,18 +12,19 @@ import mongoose from 'mongoose';
 
 export const uploadDocument = async (req, res, next) => {
     try {
-        if (!req.file) { 
+        if (!req.file) {
             return res.status(400).json({
                 success: false,
                 error: 'Please upload a PDF file',
                 statusCode: 400
             });
         }
+
         const { title } = req.body;
 
         if (!title) {
-            // Delete uploaded file if no title provided
             await fs.unlink(req.file.path);
+
             return res.status(400).json({
                 success: false,
                 error: 'Please provide a document title',
@@ -31,21 +32,18 @@ export const uploadDocument = async (req, res, next) => {
             });
         }
 
-        // Construct the URL for the uploaded file
-        const baseUrl = `http://localhost:${process.env.PORT || 8000}`;
-        const fileUrl = `${baseUrl}/uploads/documents/${req.file.filename}`;
+        // Store relative path, not localhost URL
+        const filePath = `/uploads/documents/${req.file.filename}`;
 
-        // Create document record
         const document = await Document.create({
             userId: req.user._id,
             title,
             fileName: req.file.originalname,
-            filePath: fileUrl, // Store the URL of the local path
+            filePath,
             fileSize: req.file.size,
             status: 'processing'
         });
 
-        // Process PDF in background (in production, use a queue like Bull)
         processPDF(document._id, req.file.path).catch(err => {
             console.error('Error processing PDF:', err);
         });
@@ -55,11 +53,12 @@ export const uploadDocument = async (req, res, next) => {
             data: document,
             message: 'Document uploaded successfully. Processing in background.',
         });
+
     } catch (error) {
-        // Clean up file on error
         if (req.file) {
-            await fs.unlike(req.file.path).catch(() => {});
+            await fs.unlink(req.file.path).catch(() => { });
         }
+
         next(error);
     }
 };
@@ -80,7 +79,7 @@ const processPDF = async (documentId, filePath) => {
         });
 
         console.log(`Document ${documentId} processed successfully`);
-    }   catch (error) {
+    } catch (error) {
         console.error(`Error processing document ${documentId}:`, error);
 
         await Document.findByIdAndUpdate(documentId, {
@@ -202,7 +201,7 @@ export const deleteDocument = async (req, res, next) => {
         }
 
         // Delete file from filesystem
-        await fs.unlink(document.filePath).catch(() => {});
+        await fs.unlink(document.filePath).catch(() => { });
 
         // Delete document
         await document.deleteOne();

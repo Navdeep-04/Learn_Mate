@@ -36,20 +36,29 @@ const DocumentDetailPage = () => {
 
     // Helper function to get the full PDF URL
     const getPdfUrl = () => {
-    if (!document?.data?.filePath) return null;
+        if (!document?.data?.filePath) return null;
 
-    const filePath = document.data.filePath;
+        const filePath = document.data.filePath;
 
-    if (filePath.startsWith('http://') || filePath.startsWith('https://')) {
-        return filePath;
-    }
+        const apiBaseUrl =
+            import.meta.env.VITE_API_URL ||
+            'https://learnmate-backend-gr30.onrender.com';
 
-    const apiBaseUrl =
-        import.meta.env.VITE_API_URL || 'http://localhost:8000';
+        const serverBaseUrl = apiBaseUrl.replace(/\/api\/?$/, '');
 
-    const serverBaseUrl = apiBaseUrl.replace(/\/api\/?$/, '');
+        // Convert old localhost URLs to the deployed backend
+        if (filePath.includes('localhost:8000')) {
+            return filePath.replace(
+                /^https?:\/\/localhost:8000/,
+                serverBaseUrl
+            );
+        }
 
-    return `${serverBaseUrl}${filePath.startsWith('/') ? '' : '/'}${filePath}`;
+        if (filePath.startsWith('http://') || filePath.startsWith('https://')) {
+            return filePath;
+        }
+
+        return `${serverBaseUrl}${filePath.startsWith('/') ? '' : '/'}${filePath}`;
     };
 
     // Render PDF content
